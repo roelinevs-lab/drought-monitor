@@ -33,8 +33,7 @@ jobs:
         ls -F drought-monitor/ || echo "drought-monitor folder not found."
 
     - name: Run Update Script
-      working-directory: ./drought-monitor
-      env:
+        env:
         GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
       # We use 'python3' to match the setup and explicitly run the file
       # If the file is in the root, 'python3 update_data.py' should work.
