@@ -1,0 +1,34 @@
+name: Update Weather Data
+
+on:
+  schedule:
+    # Run every 15 minutes
+    - cron: '*/15 * * * *'
+  # Allow you to run it manually from the Actions tab for testing
+  workflow_dispatch:
+
+jobs:
+  update-sheet:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        # Use pip3 to be explicit about the Python 3 environment
+        pip3 install requests gspread google-auth
+
+    - name: Run Update Script
+      env:
+        # The environment variable is set here by the GitHub Secret
+        GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      # We use python3 and assume the file is in the root. If it still fails, 
+      # the previous fix (python3 drought-monitor/update_data.py) will be the final step.
+      run: python3 update_data.py
