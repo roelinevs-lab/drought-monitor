@@ -2,9 +2,7 @@ name: Update Weather Data
 
 on:
   schedule:
-    # Run every 15 minutes
     - cron: '*/15 * * * *'
-  # Allow you to run it manually from the Actions tab for testing
   workflow_dispatch:
 
 jobs:
@@ -14,6 +12,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      # Forces the repo to be cloned into a folder named 'repo'
+      with:
+        path: repo 
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -26,7 +27,6 @@ jobs:
 
     - name: Run Update Script
       env:
-        # We pull the secret from GitHub Secrets
         GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-        working-directory: ./drought-monitor
-      run: python update_data.py
+      # Runs the script inside the 'repo' folder
+      run: python repo/update_data.py
