@@ -2,6 +2,7 @@ name: Update Weather Data
 
 on:
   schedule:
+    # Run every 15 minutes
     - cron: '*/15 * * * *'
   workflow_dispatch:
 
@@ -12,9 +13,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      # Forces the repo to be cloned into a folder named 'repo'
-      with:
-        path: repo 
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -23,10 +21,22 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install requests gspread google-auth
+        # Use pip3 install to be explicit about Python 3 environment
+        pip3 install requests gspread google-auth
+
+    - name: 🔍 DEBUG - List directory contents and verify path
+      run: |
+        # This will show us exactly where the file is located relative to the root
+        echo "Listing current directory contents:"
+        ls -F
+        echo "Listing contents of the potential nested directory:"
+        ls -F drought-monitor/ || echo "drought-monitor folder not found."
 
     - name: Run Update Script
+      working-directory: ./drought-monitor
       env:
         GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-      # Runs the script inside the 'repo' folder
-      run: python repo/update_data.py
+      # We use 'python3' to match the setup and explicitly run the file
+      # If the file is in the root, 'python3 update_data.py' should work.
+      # If the file is nested (e.g., due to a fork/sub-repo issue), we will see it in the debug log.
+      run: python3 update_data.py
