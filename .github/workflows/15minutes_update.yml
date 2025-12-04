@@ -7,26 +7,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-sheet:
+  update_data:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      # NOTE: Remove the 'path: repo' line if you added it in a previous attempt. 
-      # We need a clean checkout for this fix.
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
-    - name: Install dependencies
-      run: |
-        pip install requests gspread google-auth
+      - name: Install libraries
+        run: |
+          pip install -r requirements.txt
 
-    - name: Run Update Script
-      env:
-        GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-      # CRITICAL FIX: The error log showed the file is nested, so we use the nested path.
-      run: python drought-monitor/update_data.py
+      - name: Run Python script
+        env:
+          # This pulls the key from the secret vault we made in Phase 2
+          GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+        run: python update_data.py
