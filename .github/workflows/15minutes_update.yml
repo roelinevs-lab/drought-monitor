@@ -39,4 +39,4 @@ jobs:
       # We use 'python3' to match the setup and explicitly run the file
       # If the file is in the root, 'python3 update_data.py' should work.
       # If the file is nested (e.g., due to a fork/sub-repo issue), we will see it in the debug log.
-      run: python3 update_data.py
+      run: python drought-monitor/update_data.py
