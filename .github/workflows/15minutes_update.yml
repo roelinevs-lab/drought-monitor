@@ -28,4 +28,5 @@ jobs:
       env:
         # We pull the secret from GitHub Secrets
         GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+        working-directory: ./drought-monitor
       run: python update_data.py
